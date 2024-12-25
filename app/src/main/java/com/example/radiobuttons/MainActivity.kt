@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -53,86 +55,41 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun RadioButtonColors(name: String, modifier: Modifier = Modifier) {
+    val myBackgroundColor = remember {
+        mutableStateOf(Color.White)
+    }
+
+    val selectedIndex = remember {
+        mutableIntStateOf(0)
+    }
+
+    val buttonTexts = listOf("Red", "Green", "Yellow", "Gray")
+
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(myBackgroundColor.value).padding(top = 30.dp),
+//        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val myBackgroundColor = remember {
-            mutableStateOf(Color.White)
-        }
-
-        val redState = remember {
-            mutableStateOf(true)
-        }
-
-        val greenState = remember {
-            mutableStateOf(false)
-        }
-
-        val yellowState = remember {
-            mutableStateOf(false)
-        }
-
-        val grayState = remember {
-            mutableStateOf(false)
-        }
-
-        Row(
-            modifier = Modifier.width(100.dp).background(myBackgroundColor.value),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            RadioButton(
-                selected = redState.value,
-                onClick = {
-                    redState.value = true
-                },
-                colors = RadioButtonDefaults.colors(Color.Blue)
-            )
-            Text(text = "Red")
-        }
-
-        Row(
-            modifier = Modifier.width(100.dp),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            RadioButton(
-                selected = greenState.value,
-                onClick = {
-                    greenState.value = true
-                },
-            )
-            Text(text = "Green")
-        }
-
-        Row(
-            modifier = Modifier.width(100.dp),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            RadioButton(
-                selected = yellowState.value,
-                onClick = {
-                    yellowState.value = true
-                }
-            )
-            Text(text = "Yellow")
-        }
-
-        Row(
-            modifier = Modifier.width(100.dp),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            RadioButton(
-                selected = false,
-                onClick = {
-                    grayState.value = true
-                }
-            )
-            Text(text = "Gray")
+        buttonTexts.forEachIndexed { index, s ->
+            Row(
+                modifier = Modifier
+                    .width(100.dp).clickable {
+                        selectedIndex.value = index
+                    },
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = selectedIndex.value == index,
+                    onClick = {
+                        selectedIndex.value = index
+                    },
+                    colors = RadioButtonDefaults.colors(Color.Blue)
+                )
+                Text(text = s)
+            }
         }
 
         Spacer(modifier = Modifier.size(20.dp))
@@ -140,7 +97,12 @@ fun RadioButtonColors(name: String, modifier: Modifier = Modifier) {
         Button(
             shape = RoundedCornerShape(5.dp),
             onClick = {
-
+                when (selectedIndex.value) {
+                    0 -> myBackgroundColor.value = Color.Red
+                    1 -> myBackgroundColor.value = Color.Green
+                    2 -> myBackgroundColor.value = Color.Yellow
+                    3 -> myBackgroundColor.value = Color.Gray
+                }
             },
             colors = ButtonDefaults.buttonColors(Color(0xFF8850EC))
         ) {
