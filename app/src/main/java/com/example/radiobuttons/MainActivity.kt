@@ -64,7 +64,7 @@ fun RadioButtonColors(name: String, modifier: Modifier = Modifier) {
     }
 
     val buttonTexts = listOf("Red", "Green", "Yellow", "Gray")
-
+    val colorList = arrayListOf(Color.Red, Color.Green, Color.Yellow, Color.Gray)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -97,12 +97,7 @@ fun RadioButtonColors(name: String, modifier: Modifier = Modifier) {
         Button(
             shape = RoundedCornerShape(5.dp),
             onClick = {
-                when (selectedIndex.value) {
-                    0 -> myBackgroundColor.value = Color.Red
-                    1 -> myBackgroundColor.value = Color.Green
-                    2 -> myBackgroundColor.value = Color.Yellow
-                    3 -> myBackgroundColor.value = Color.Gray
-                }
+                myBackgroundColor.value = colorList[selectedIndex.value]
             },
             colors = ButtonDefaults.buttonColors(Color(0xFF8850EC))
         ) {
